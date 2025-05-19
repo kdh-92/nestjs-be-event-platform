@@ -17,7 +17,6 @@ import { RolesGuard } from './guards/roles.guard';
     }),
   ],
   providers: [
-    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

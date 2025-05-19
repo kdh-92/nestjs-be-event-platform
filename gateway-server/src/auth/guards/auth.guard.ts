@@ -1,12 +1,11 @@
 import {
+  ExecutionContext,
   Injectable,
-  type ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import type { Reflector } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
-import type { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -14,20 +13,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  canActivate(
-    context: ExecutionContext
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    return isPublic ? true : super.canActivate(context);
+    console.log(
+      `[PublicGuard] isPublic: ${isPublic} for ${context.getHandler().name}`
+    );
+
+    if (isPublic) return true;
+    return super.canActivate(context);
   }
 
-  handleRequest(err: any, user: any, info: any) {
+  handleRequest(err: any, user: any) {
     if (err || !user) {
-      throw err || new UnauthorizedException('Authentication failed');
+      throw err || new UnauthorizedException('인증 실패');
     }
     return user;
   }
