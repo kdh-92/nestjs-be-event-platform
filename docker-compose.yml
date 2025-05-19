@@ -1,0 +1,78 @@
+services:
+  gateway:
+    build: ./gateway-server
+    ports:
+      - '3000:3000'
+    depends_on:
+      - auth
+      # - event
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=your_jwt_secret_key_change_in_production
+      - AUTH_SERVICE_URL=http://auth:3001
+      - EVENT_SERVICE_URL=http://event:3002
+    networks:
+      - app-network
+    restart: always
+
+  auth:
+    build: ./auth-server
+    ports:
+      - '3001:3001'
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MONGODB_URI=mongodb://auth-mongo:27017/auth
+      - JWT_SECRET=your_jwt_secret_key_change_in_production
+      - JWT_EXPIRATION=1d
+    depends_on:
+      - auth-mongo
+    networks:
+      - app-network
+    restart: always
+
+  event:
+    build: ./event-server
+    ports:
+      - '3002:3002'
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - MONGODB_URI=mongodb://event-mongo:27017/event
+      - JWT_SECRET=your_jwt_secret_key_change_in_production
+      - AUTH_SERVICE_URL=http://auth:3001
+    depends_on:
+      - event-mongo
+      - auth
+    networks:
+      - app-network
+    restart: always
+
+  auth-mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - auth-mongo-data:/data/db
+    networks:
+      - app-network
+    restart: always
+
+  event-mongo:
+    image: mongo:latest
+    ports:
+      - '27018:27017'
+    volumes:
+      - event-mongo-data:/data/db
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  auth-mongo-data:
+  # event-mongo-data:
