@@ -43,13 +43,17 @@ export class ProxyController {
   private async forward(req: Request, res: Response, baseUrl: string) {
     const { 'content-length': _, ...headers } = req.headers;
     const url = baseUrl + req.originalUrl;
+    const user = (req as any).user;
 
     try {
       const response = await lastValueFrom(
         this.httpService.request({
           url,
           method: req.method as any,
-          headers: headers,
+          headers: {
+            ...headers,
+            'x-user-id': user?.userId,
+          },
           data: req.body,
           params: req.query,
         })

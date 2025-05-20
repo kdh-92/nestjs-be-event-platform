@@ -1,4 +1,10 @@
-import { IsArray, IsDateString, IsEnum, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsMongoId,
+  IsString,
+} from 'class-validator';
 import { EventCondition } from '../event-condition.interface';
 
 export class CreateEventDto {
@@ -15,5 +21,11 @@ export class CreateEventDto {
   @IsEnum(['AND', 'OR'])
   logicalOperator!: 'AND' | 'OR';
   @IsArray()
+  rewards!: string[];
+}
+
+export class UpdateEventRewardsDto {
+  @IsArray()
+  @IsMongoId({ each: true })
   rewards!: string[];
 }

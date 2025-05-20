@@ -5,3 +5,9 @@ export enum RewardType {
   BADGE = 'BADGE',
   CURRENCY = 'CURRENCY',
 }
+
+export enum RewardStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+}

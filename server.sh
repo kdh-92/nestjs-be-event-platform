@@ -1,2 +1,4 @@
+#!/bin/bash
+
 docker compose down -v
-docker compose -d --build
+docker compose up -d --build
