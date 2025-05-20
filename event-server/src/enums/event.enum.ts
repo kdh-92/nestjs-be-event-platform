@@ -1,0 +1,12 @@
+export enum EventType {
+  DAILY_LOGIN = 'DAILY_LOGIN',
+  FRIEND_INVITE = 'FRIEND_INVITE',
+  QUEST_COMPLETE = 'QUEST_COMPLETE',
+  PURCHASE = 'PURCHASE',
+  CONTENT_VIEW = 'CONTENT_VIEW',
+}
+
+export enum EventStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}

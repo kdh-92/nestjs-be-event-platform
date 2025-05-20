@@ -28,7 +28,6 @@ export class RolesGuard implements CanActivate {
       throw new ForbiddenException('인증 정보가 없습니다.');
     }
 
-    // ADMIN은 무조건 허용
     if (user.role === 'ADMIN') return true;
 
     const matched = ROLE_ROUTE_MAP.find(route => route.pattern.test(path));
@@ -43,19 +42,5 @@ export class RolesGuard implements CanActivate {
     }
 
     return true;
-    // const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
-    //   context.getHandler(),
-    //   context.getClass(),
-    // ]);
-
-    // const { user } = context.switchToHttp().getRequest();
-    // if (!user) {
-    //   throw new ForbiddenException('인증 정보가 없습니다.');
-    // }
-    // if (!requiredRoles.includes(user.role)) {
-    //   throw new ForbiddenException('접근 권한이 없습니다.');
-    // }
-
-    // return requiredRoles.includes(user?.role);
   }
 }
